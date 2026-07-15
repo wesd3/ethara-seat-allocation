@@ -1,0 +1,22 @@
+# One-command local run of the full stack:
+#   docker compose up --build
+# Then open http://localhost:8080  (backend docs at http://localhost:8000/docs)
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - CORS_ORIGINS=*
+      # - OPENAI_API_KEY=sk-...   # optional, enables LLM-polished answers
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Point the built frontend at the backend service.
+        VITE_API_BASE: http://localhost:8000
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
