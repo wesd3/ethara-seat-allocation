@@ -1,6 +1,9 @@
 // Central API client. In dev, requests go through the Vite proxy (/api -> :8010).
 // In production set VITE_API_BASE to the deployed backend URL.
-const BASE = import.meta.env.VITE_API_BASE || '/api'
+// Render's `fromService` supplies a bare host (no scheme), so assume https when
+// a host is given without one. A leading "/" stays relative (dev proxy).
+const RAW = import.meta.env.VITE_API_BASE || '/api'
+const BASE = RAW.startsWith('http') || RAW.startsWith('/') ? RAW : `https://${RAW}`
 
 async function request(path, options = {}) {
   const res = await fetch(BASE + path, {

@@ -22,9 +22,12 @@ services:
     buildCommand: "npm install && npm run build"
     staticPublishPath: dist
     envVars:
-      # Set this to the deployed backend URL after the backend is live.
+      # Auto-wired to the backend service's host at deploy time (no manual step).
       - key: VITE_API_BASE
-        value: "https://ethara-backend.onrender.com"
+        fromService:
+          type: web
+          name: ethara-backend
+          property: host
     routes:
       - type: rewrite
         source: /*
