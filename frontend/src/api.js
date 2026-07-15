@@ -5,22 +5,39 @@
 const RAW = import.meta.env.VITE_API_BASE || '/api'
 const BASE = RAW.startsWith('http') || RAW.startsWith('/') ? RAW : `https://${RAW}`
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
 async function request(path, options = {}) {
-  const res = await fetch(BASE + path, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  })
-  if (!res.ok) {
-    let detail = res.statusText
+  // Free-tier hosts (e.g. Render) sleep when idle and take ~50s to wake, during
+  // which fetch() can throw a network error. Retry a few times so the app
+  // self-heals on a cold start instead of showing "Failed to fetch".
+  const maxAttempts = 8
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    let res
     try {
-      const body = await res.json()
-      detail = body.detail || detail
-    } catch {
-      /* ignore */
+      res = await fetch(BASE + path, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options,
+      })
+    } catch (err) {
+      if (attempt < maxAttempts) {
+        await sleep(5000)
+        continue
+      }
+      throw new Error('Cannot reach the server — it may be waking up from sleep. Please retry in a moment.')
     }
-    throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail))
+    if (!res.ok) {
+      let detail = res.statusText
+      try {
+        const body = await res.json()
+        detail = body.detail || detail
+      } catch {
+        /* ignore */
+      }
+      throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail))
+    }
+    return res.status === 204 ? null : res.json()
   }
-  return res.status === 204 ? null : res.json()
 }
 
 const qs = (params) => {
