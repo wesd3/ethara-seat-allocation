@@ -54,8 +54,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-500">Live overview of seating, projects and allocation.</p>
+        <h1 className="text-2xl font-bold tracking-tight text-ink">Dashboard</h1>
+        <p className="mt-1 text-sm text-muted">Live overview of seating, projects and allocation.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -72,16 +72,16 @@ export default function Dashboard() {
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="card">
           <div className="mb-5 flex items-center justify-between">
-            <h2 className="font-semibold text-slate-900">Project-wise Allocation</h2>
-            <span className="badge bg-brand-50 text-brand-700 ring-brand-600/20">{projects.length} projects</span>
+            <h2 className="font-semibold text-ink">Project-wise Allocation</h2>
+            <span className="badge bg-brand-500/10 text-brand-600 ring-brand-500/25">{projects.length} projects</span>
           </div>
           <div className="space-y-4">
             {projects.map((p) => (
               <div key={p.project_id}>
                 <div className="mb-1.5 flex justify-between text-sm">
-                  <span className="font-medium text-slate-700">{p.project_name}</span>
-                  <span className="text-slate-500">
-                    <b className="text-slate-700">{p.allocated_seats}</b> seats · {p.employee_count} emp
+                  <span className="font-medium text-ink-2">{p.project_name}</span>
+                  <span className="text-muted">
+                    <b className="text-ink">{p.allocated_seats}</b> seats · {p.employee_count} emp
                   </span>
                 </div>
                 <Bar value={p.employee_count} max={maxEmp} />
@@ -92,20 +92,20 @@ export default function Dashboard() {
 
         <div className="card">
           <div className="mb-5 flex items-center justify-between">
-            <h2 className="font-semibold text-slate-900">Floor-wise Occupancy</h2>
-            <span className="badge bg-blue-50 text-blue-700 ring-blue-600/20">{floors.length} floors</span>
+            <h2 className="font-semibold text-ink">Floor-wise Occupancy</h2>
+            <span className="badge bg-blue-500/10 text-blue-600 ring-blue-500/25">{floors.length} floors</span>
           </div>
           <div className="space-y-5">
             {floors.map((f) => (
               <div key={f.floor}>
                 <div className="mb-1.5 flex justify-between text-sm">
-                  <span className="font-medium text-slate-700">Floor {f.floor}</span>
-                  <span className="text-slate-500">
-                    {f.occupied}/{f.total_seats} · <b className="text-slate-700">{f.occupancy_pct}%</b>
+                  <span className="font-medium text-ink-2">Floor {f.floor}</span>
+                  <span className="text-muted">
+                    {f.occupied}/{f.total_seats} · <b className="text-ink">{f.occupancy_pct}%</b>
                   </span>
                 </div>
-                <Bar value={f.occupied} max={f.total_seats} gradient="from-blue-500 to-cyan-500" />
-                <div className="mt-1.5 flex flex-wrap gap-3 text-[11px] text-slate-400">
+                <Bar value={f.occupied} max={f.total_seats} variant="blue" />
+                <div className="mt-1.5 flex flex-wrap gap-3 text-[11px] text-faint">
                   <span className="inline-flex items-center gap-1"><i className="h-2 w-2 rounded-full bg-emerald-400" />{f.available} available</span>
                   <span className="inline-flex items-center gap-1"><i className="h-2 w-2 rounded-full bg-amber-400" />{f.reserved} reserved</span>
                   <span className="inline-flex items-center gap-1"><i className="h-2 w-2 rounded-full bg-rose-400" />{f.maintenance} maintenance</span>

@@ -2,19 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ------------------------------------------------------------------ *
+ * Design tokens. Neutrals flip with `.dark`; accent flips with
+ * [data-theme]. Both are set on <html> at runtime (see theme.js).
+ * All values are space-separated RGB triplets for Tailwind's
+ * `rgb(var(--x) / <alpha>)` colour bindings.
+ * ------------------------------------------------------------------ */
+:root {
+  /* Neutrals — light */
+  --app: 248 250 252;
+  --surface: 255 255 255;
+  --surface-2: 241 245 249;
+  --line: 226 232 240;
+  --line-soft: 241 245 249;
+  --ink: 15 23 42;
+  --ink-2: 51 65 85;
+  --muted: 100 116 139;
+  --faint: 148 163 184;
+
+  /* Accent — Indigo (default) */
+  --brand-50: 238 242 255;
+  --brand-100: 224 231 255;
+  --brand-200: 199 210 254;
+  --brand-300: 165 180 252;
+  --brand-400: 129 140 248;
+  --brand-500: 99 102 241;
+  --brand-600: 79 70 229;
+  --brand-700: 67 56 202;
+  --brand-800: 55 48 163;
+  --brand-900: 49 46 129;
+  --accent2: 139 92 246; /* gradient end */
+}
+
+/* Neutrals — dark */
+.dark {
+  --app: 8 12 24;
+  --surface: 20 27 45;
+  --surface-2: 30 41 59;
+  --line: 51 65 85;
+  --line-soft: 40 51 71;
+  --ink: 241 245 249;
+  --ink-2: 203 213 225;
+  --muted: 148 163 184;
+  --faint: 100 116 139;
+}
+
+/* Accent presets */
+[data-theme='indigo'] {
+  --brand-50: 238 242 255; --brand-100: 224 231 255; --brand-200: 199 210 254;
+  --brand-300: 165 180 252; --brand-400: 129 140 248; --brand-500: 99 102 241;
+  --brand-600: 79 70 229; --brand-700: 67 56 202; --brand-800: 55 48 163;
+  --brand-900: 49 46 129; --accent2: 139 92 246;
+}
+[data-theme='emerald'] {
+  --brand-50: 236 253 245; --brand-100: 209 250 229; --brand-200: 167 243 208;
+  --brand-300: 110 231 183; --brand-400: 52 211 153; --brand-500: 16 185 129;
+  --brand-600: 5 150 105; --brand-700: 4 120 87; --brand-800: 6 95 70;
+  --brand-900: 6 78 59; --accent2: 20 184 166;
+}
+[data-theme='blue'] {
+  --brand-50: 239 246 255; --brand-100: 219 234 254; --brand-200: 191 219 254;
+  --brand-300: 147 197 253; --brand-400: 96 165 250; --brand-500: 59 130 246;
+  --brand-600: 37 99 235; --brand-700: 29 78 216; --brand-800: 30 64 175;
+  --brand-900: 30 58 138; --accent2: 6 182 212;
+}
+[data-theme='rose'] {
+  --brand-50: 255 241 242; --brand-100: 255 228 230; --brand-200: 254 205 211;
+  --brand-300: 253 164 175; --brand-400: 251 113 133; --brand-500: 244 63 94;
+  --brand-600: 225 29 72; --brand-700: 190 18 60; --brand-800: 159 18 57;
+  --brand-900: 136 19 55; --accent2: 245 158 11;
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply bg-slate-50 text-slate-800 font-sans;
+    @apply bg-app text-ink-2 font-sans;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
 @layer components {
   .card {
-    @apply bg-white rounded-2xl shadow-card border border-slate-200/70 p-5 transition-shadow;
+    @apply bg-surface rounded-2xl shadow-card border border-line p-5 transition-shadow;
   }
   .card-hover {
     @apply hover:shadow-hover hover:-translate-y-0.5 transition-all duration-200;
@@ -23,33 +95,51 @@
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-150 active:scale-[.98];
   }
   .btn-primary {
-    @apply btn text-white bg-gradient-to-br from-brand-500 to-violet-500 shadow-glow hover:brightness-110 disabled:opacity-50 disabled:shadow-none;
+    @apply btn text-white grad-accent glow-accent hover:brightness-110 disabled:opacity-50 disabled:shadow-none;
   }
   .btn-ghost {
-    @apply btn bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50;
+    @apply btn bg-surface border border-line text-ink-2 hover:bg-surface-2 disabled:opacity-50;
   }
   .input {
-    @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition;
+    @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink shadow-sm placeholder:text-faint focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition;
   }
   .label {
-    @apply block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5;
+    @apply block text-xs font-semibold uppercase tracking-wide text-muted mb-1.5;
   }
   .badge {
     @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset;
   }
   .chip {
-    @apply rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-brand-300 hover:text-brand-700 hover:shadow;
+    @apply rounded-full border border-line bg-surface px-3.5 py-1.5 text-xs font-medium text-ink-2 shadow-sm transition hover:border-brand-300 hover:text-brand-600 hover:shadow;
+  }
+
+  /* Accent gradient helpers (recolour with the theme) */
+  .grad-accent {
+    background-image: linear-gradient(135deg, rgb(var(--brand-500)), rgb(var(--accent2)));
+  }
+  .grad-accent-soft {
+    background-image: linear-gradient(135deg, rgb(var(--brand-500) / 0.12), rgb(var(--accent2) / 0.12));
+  }
+  .glow-accent {
+    box-shadow: 0 10px 30px -10px rgb(var(--brand-500) / 0.45);
+  }
+  .text-accent {
+    color: rgb(var(--brand-600));
   }
 }
 
-/* Slim, modern scrollbars */
+.dark .text-accent {
+  color: rgb(var(--brand-300));
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-slate-300/70;
+  background: rgb(var(--faint) / 0.5);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-400/70;
+  background: rgb(var(--muted) / 0.6);
 }

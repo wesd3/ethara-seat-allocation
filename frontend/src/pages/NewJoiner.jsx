@@ -9,7 +9,7 @@ function StepBadge({ n, active, done }) {
   return (
     <span
       className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
-        done ? 'bg-emerald-500 text-white' : active ? 'bg-gradient-to-br from-brand-500 to-violet-500 text-white' : 'bg-slate-200 text-slate-500'
+        done ? 'bg-emerald-500 text-white' : active ? 'grad-accent text-white' : 'bg-surface-2 text-muted'
       }`}
     >
       {done ? <IconCheck className="h-4 w-4" /> : n}
@@ -91,8 +91,8 @@ export default function NewJoiner() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">New Joiner Allocation</h1>
-        <p className="mt-1 text-sm text-slate-500">Add an employee, get a seat suggested near their team, and allocate it.</p>
+        <h1 className="text-2xl font-bold tracking-tight text-ink">New Joiner Allocation</h1>
+        <p className="mt-1 text-sm text-muted">Add an employee, get a seat suggested near their team, and allocate it.</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -100,7 +100,7 @@ export default function NewJoiner() {
         <form onSubmit={submit} className="card space-y-4">
           <div className="flex items-center gap-3">
             <StepBadge n={1} active={!created} done={!!created} />
-            <h2 className="font-semibold text-slate-900">Employee details</h2>
+            <h2 className="font-semibold text-ink">Employee details</h2>
           </div>
           <div>
             <label className="label">Full name *</label>
@@ -143,34 +143,34 @@ export default function NewJoiner() {
         <div className="card space-y-4">
           <div className="flex items-center gap-3">
             <StepBadge n={2} active={!!created && !allocated} done={allocated} />
-            <h2 className="font-semibold text-slate-900">Seat suggestion & allocation</h2>
+            <h2 className="font-semibold text-ink">Seat suggestion & allocation</h2>
           </div>
 
           {!created ? (
-            <div className="flex h-48 flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 text-center text-sm text-slate-400">
-              <IconPin className="mb-2 h-7 w-7 text-slate-300" />
+            <div className="flex h-48 flex-col items-center justify-center rounded-xl border-2 border-dashed border-line text-center text-sm text-muted">
+              <IconPin className="mb-2 h-7 w-7 text-faint" />
               Create an employee to see suggested seats.
             </div>
           ) : (
             <>
-              <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3">
+              <div className="flex items-center gap-3 rounded-xl bg-surface-2 p-3">
                 <Avatar name={created.name} />
                 <div className="text-sm">
-                  <div className="font-semibold text-slate-800">{created.name}</div>
-                  <div className="text-slate-500">{created.employee_code} · {created.project_name || 'No project'}</div>
+                  <div className="font-semibold text-ink">{created.name}</div>
+                  <div className="text-muted">{created.employee_code} · {created.project_name || 'No project'}</div>
                 </div>
                 <div className="ml-auto"><StatusBadge status={created.allocation_status} /></div>
               </div>
 
               {allocated ? (
-                <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 ring-1 ring-emerald-100">
-                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                <div className="rounded-2xl bg-emerald-500/10 p-5 ring-1 ring-emerald-500/20">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-600">
                     <IconCheck className="h-4 w-4" /> Allocated
                   </div>
-                  <div className="mt-1.5 text-xl font-bold text-slate-900">
+                  <div className="mt-1.5 text-xl font-bold text-ink">
                     Floor {created.seat.floor} · Zone {created.seat.zone} · Bay {created.seat.bay}
                   </div>
-                  <div className="font-mono text-sm text-slate-500">Seat {created.seat.seat_number}</div>
+                  <div className="font-mono text-sm text-muted">Seat {created.seat.seat_number}</div>
                 </div>
               ) : (
                 <>
@@ -196,14 +196,14 @@ export default function NewJoiner() {
                   </div>
 
                   {suggestion && (
-                    <div className="animate-pop-in rounded-2xl bg-gradient-to-br from-brand-50 to-violet-50 p-5 ring-1 ring-brand-100">
-                      <div className="flex items-center gap-1.5 text-xs font-medium text-brand-700">
+                    <div className="grad-accent-soft animate-pop-in rounded-2xl p-5 ring-1 ring-brand-500/20">
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-accent">
                         <IconPin className="h-4 w-4" /> {suggestion.reason}
                       </div>
-                      <div className="mt-1.5 text-xl font-bold text-slate-900">
+                      <div className="mt-1.5 text-xl font-bold text-ink">
                         Floor {suggestion.seat.floor} · Zone {suggestion.seat.zone} · Bay {suggestion.seat.bay}
                       </div>
-                      <div className="font-mono text-sm text-slate-500">Seat {suggestion.seat.seat_number}</div>
+                      <div className="font-mono text-sm text-muted">Seat {suggestion.seat.seat_number}</div>
                       <button className="btn-primary mt-4" disabled={busy} onClick={() => allocate(suggestion.seat.id)}>
                         Allocate this seat
                       </button>

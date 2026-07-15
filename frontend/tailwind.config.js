@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+const v = (name) => `rgb(var(${name}) / <alpha-value>)`
+
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
@@ -7,23 +10,33 @@ export default {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
+        // Accent scale — driven by CSS variables (see index.css), swappable at runtime.
         brand: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
+          50: v('--brand-50'),
+          100: v('--brand-100'),
+          200: v('--brand-200'),
+          300: v('--brand-300'),
+          400: v('--brand-400'),
+          500: v('--brand-500'),
+          600: v('--brand-600'),
+          700: v('--brand-700'),
+          800: v('--brand-800'),
+          900: v('--brand-900'),
         },
+        // Neutral surface/text tokens — flip between light & dark.
+        app: v('--app'),
+        surface: v('--surface'),
+        'surface-2': v('--surface-2'),
+        line: v('--line'),
+        'line-soft': v('--line-soft'),
+        ink: v('--ink'),
+        'ink-2': v('--ink-2'),
+        muted: v('--muted'),
+        faint: v('--faint'),
       },
       boxShadow: {
         card: '0 1px 2px 0 rgb(16 24 40 / 0.04), 0 1px 3px 0 rgb(16 24 40 / 0.06)',
         hover: '0 8px 24px -6px rgb(16 24 40 / 0.12)',
-        glow: '0 10px 30px -10px rgb(99 102 241 / 0.45)',
       },
       keyframes: {
         'fade-in': {

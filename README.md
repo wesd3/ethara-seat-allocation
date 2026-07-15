@@ -38,6 +38,7 @@ natural-language **AI assistant** for seating queries.
 | **Dashboard** | Total/occupied/available/reserved seats, project-wise allocation, floor-wise occupancy, pending new joiners. |
 | **AI assistant** | Natural-language Q&A over seats, projects, availability, neighbours and utilisation. Rule-based by default, optional LLM polish. |
 | **CSV upload** | Bulk-import employees from CSV. |
+| **Theming** | Live theme switcher in the sidebar — 4 accent presets (Indigo default, Emerald, Ocean, Sunset) plus a light/dark mode toggle, remembered across reloads. |
 
 ---
 

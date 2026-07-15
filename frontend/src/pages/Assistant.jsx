@@ -12,7 +12,7 @@ const SUGGESTIONS = [
 
 function BotAvatar() {
   return (
-    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-violet-500 text-white shadow-sm">
+    <span className="grad-accent flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white shadow-sm">
       <IconSparkles className="h-4 w-4" />
     </span>
   )
@@ -52,12 +52,12 @@ export default function Assistant() {
   return (
     <div className="mx-auto max-w-3xl space-y-5">
       <div className="flex items-center gap-3">
-        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-violet-500 text-white shadow-glow">
+        <span className="grad-accent glow-accent flex h-11 w-11 items-center justify-center rounded-2xl text-white">
           <IconSparkles className="h-5 w-5" />
         </span>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">AI Assistant</h1>
-          <p className="text-sm text-slate-500">Answers grounded in the live database.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-ink">AI Assistant</h1>
+          <p className="text-sm text-muted">Answers grounded in the live database.</p>
         </div>
       </div>
 
@@ -75,15 +75,15 @@ export default function Assistant() {
               <div
                 className={`max-w-[78%] rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
                   m.role === 'user'
-                    ? 'rounded-br-md bg-gradient-to-br from-brand-500 to-violet-500 text-white'
+                    ? 'grad-accent rounded-br-md text-white'
                     : m.error
-                    ? 'rounded-bl-md bg-rose-50 text-rose-700 ring-1 ring-rose-100'
-                    : 'rounded-bl-md bg-slate-100 text-slate-800'
+                    ? 'rounded-bl-md bg-rose-500/10 text-rose-600 ring-1 ring-rose-500/20'
+                    : 'rounded-bl-md bg-surface-2 text-ink'
                 }`}
               >
                 {m.text}
                 {m.intent && (
-                  <div className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">intent · {m.intent}</div>
+                  <div className={`mt-1 text-[10px] font-semibold uppercase tracking-wider ${m.role === 'user' ? 'text-white/70' : 'text-faint'}`}>intent · {m.intent}</div>
                 )}
               </div>
             </div>
@@ -91,17 +91,17 @@ export default function Assistant() {
           {busy && (
             <div className="flex items-end gap-2.5">
               <BotAvatar />
-              <div className="flex gap-1 rounded-2xl rounded-bl-md bg-slate-100 px-4 py-3">
-                <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.2s]" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.1s]" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400" />
+              <div className="flex gap-1 rounded-2xl rounded-bl-md bg-surface-2 px-4 py-3">
+                <span className="h-2 w-2 animate-bounce rounded-full bg-faint [animation-delay:-0.2s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-faint [animation-delay:-0.1s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-faint" />
               </div>
             </div>
           )}
           <div ref={endRef} />
         </div>
 
-        <form onSubmit={(e) => { e.preventDefault(); send() }} className="flex gap-2 border-t border-slate-100 bg-white p-3">
+        <form onSubmit={(e) => { e.preventDefault(); send() }} className="flex gap-2 border-t border-line-soft bg-surface p-3">
           <input className="input" placeholder="Ask about seats, projects, neighbours…" value={input} onChange={(e) => setInput(e.target.value)} />
           <button className="btn-primary px-3.5" disabled={busy || !input.trim()} aria-label="Send">
             <IconSend className="h-5 w-5" />
@@ -109,8 +109,8 @@ export default function Assistant() {
         </form>
       </div>
 
-      <p className="text-center text-xs text-slate-400">
-        Set <code className="rounded bg-slate-100 px-1 py-0.5">OPENAI_API_KEY</code> on the backend to enable LLM-polished phrasing.
+      <p className="text-center text-xs text-faint">
+        Set <code className="rounded bg-surface-2 px-1 py-0.5">OPENAI_API_KEY</code> on the backend to enable LLM-polished phrasing.
       </p>
     </div>
   )

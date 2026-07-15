@@ -4,6 +4,7 @@ import Employees from './pages/Employees.jsx'
 import Seats from './pages/Seats.jsx'
 import NewJoiner from './pages/NewJoiner.jsx'
 import Assistant from './pages/Assistant.jsx'
+import ThemeSwitcher from './components/ThemeSwitcher.jsx'
 import {
   IconDashboard,
   IconUsers,
@@ -23,18 +24,18 @@ const NAV = [
 function Brand() {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-violet-500 text-lg font-black text-white shadow-glow">
+      <div className="grad-accent glow-accent flex h-10 w-10 items-center justify-center rounded-2xl text-lg font-black text-white">
         E
       </div>
       <div className="leading-tight">
-        <div className="text-sm font-bold text-slate-900">Ethara</div>
-        <div className="text-[11px] text-slate-400">Seat Allocation</div>
+        <div className="text-sm font-bold text-ink">Ethara</div>
+        <div className="text-[11px] text-faint">Seat Allocation</div>
       </div>
     </div>
   )
 }
 
-function NavItems({ onNavigate }) {
+function NavItems() {
   return (
     <>
       {NAV.map((n) => (
@@ -42,18 +43,17 @@ function NavItems({ onNavigate }) {
           key={n.to}
           to={n.to}
           end={n.end}
-          onClick={onNavigate}
           className={({ isActive }) =>
             `group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all ${
               isActive
-                ? 'bg-gradient-to-br from-brand-500 to-violet-500 text-white shadow-glow'
-                : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+                ? 'grad-accent glow-accent text-white'
+                : 'text-muted hover:bg-surface-2 hover:text-ink-2'
             }`
           }
         >
           {({ isActive }) => (
             <>
-              <n.icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-600'}`} />
+              <n.icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-faint group-hover:text-muted'}`} />
               {n.label}
             </>
           )}
@@ -65,29 +65,35 @@ function NavItems({ onNavigate }) {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-app">
       {/* Sidebar (desktop) */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200 bg-white/80 px-4 py-6 backdrop-blur lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-line bg-surface/80 px-4 py-6 backdrop-blur lg:flex">
         <div className="px-1.5">
           <Brand />
         </div>
         <nav className="mt-8 flex flex-1 flex-col gap-1.5">
           <NavItems />
         </nav>
-        <div className="rounded-2xl bg-gradient-to-br from-brand-50 to-violet-50 p-4 text-xs text-slate-500 ring-1 ring-brand-100">
-          <div className="font-semibold text-brand-700">Vibe Coding Assessment</div>
-          <p className="mt-1 leading-relaxed">Managing 5,000 employees across 6,000 seats & 11 projects.</p>
+        <div className="space-y-3">
+          <ThemeSwitcher />
+          <div className="grad-accent-soft rounded-2xl p-4 text-xs text-muted ring-1 ring-brand-500/20">
+            <div className="font-semibold text-accent">Vibe Coding Assessment</div>
+            <p className="mt-1 leading-relaxed">Managing 5,000 employees across 6,000 seats & 11 projects.</p>
+          </div>
         </div>
       </aside>
 
       {/* Mobile top nav */}
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-30 border-b border-line bg-surface/90 backdrop-blur lg:hidden">
         <div className="flex items-center justify-between px-4 py-3">
           <Brand />
         </div>
         <nav className="flex gap-1.5 overflow-x-auto px-4 pb-3">
           <NavItems />
         </nav>
+        <div className="px-4 pb-3">
+          <ThemeSwitcher />
+        </div>
       </header>
 
       {/* Content */}
@@ -100,7 +106,7 @@ export default function App() {
             <Route path="/new-joiner" element={<NewJoiner />} />
             <Route path="/assistant" element={<Assistant />} />
           </Routes>
-          <footer className="mt-10 border-t border-slate-200 pt-6 text-center text-xs text-slate-400">
+          <footer className="mt-10 border-t border-line pt-6 text-center text-xs text-faint">
             Ethara Seat Allocation & Project Mapping System
           </footer>
         </main>

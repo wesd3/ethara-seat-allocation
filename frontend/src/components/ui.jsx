@@ -1,14 +1,14 @@
 // Shared presentational helpers.
 
 const STATUS_STYLES = {
-  Available: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  Occupied: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  Reserved: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  Maintenance: 'bg-rose-50 text-rose-700 ring-rose-600/20',
-  allocated: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  pending: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  active: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  inactive: 'bg-slate-100 text-slate-600 ring-slate-500/20',
+  Available: 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/25',
+  Occupied: 'bg-blue-500/10 text-blue-600 ring-blue-500/25',
+  Reserved: 'bg-amber-500/10 text-amber-600 ring-amber-500/25',
+  Maintenance: 'bg-rose-500/10 text-rose-600 ring-rose-500/25',
+  allocated: 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/25',
+  pending: 'bg-amber-500/10 text-amber-600 ring-amber-500/25',
+  active: 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/25',
+  inactive: 'bg-slate-500/10 text-slate-500 ring-slate-500/25',
 }
 const DOT = {
   Available: 'bg-emerald-500',
@@ -23,7 +23,7 @@ const DOT = {
 
 export function StatusBadge({ status }) {
   return (
-    <span className={`badge ${STATUS_STYLES[status] || 'bg-slate-100 text-slate-600 ring-slate-500/20'}`}>
+    <span className={`badge ${STATUS_STYLES[status] || 'bg-slate-500/10 text-slate-500 ring-slate-500/25'}`}>
       <span className={`h-1.5 w-1.5 rounded-full ${DOT[status] || 'bg-slate-400'}`} />
       {status}
     </span>
@@ -31,7 +31,6 @@ export function StatusBadge({ status }) {
 }
 
 const GRADIENTS = {
-  brand: 'from-brand-500 to-violet-500',
   blue: 'from-blue-500 to-cyan-500',
   emerald: 'from-emerald-500 to-teal-500',
   amber: 'from-amber-500 to-orange-500',
@@ -41,16 +40,17 @@ const GRADIENTS = {
 }
 
 export function StatCard({ label, value, icon: Icon, color = 'brand', sub }) {
+  const iconClass = color === 'brand' ? 'grad-accent' : `bg-gradient-to-br ${GRADIENTS[color] || GRADIENTS.slate}`
   return (
     <div className="card card-hover animate-fade-in">
       <div className="flex items-start justify-between">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</div>
-          <div className="mt-2 text-3xl font-bold tracking-tight text-slate-900">{value}</div>
-          {sub && <div className="mt-1 text-xs text-slate-400">{sub}</div>}
+          <div className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</div>
+          <div className="mt-2 text-3xl font-bold tracking-tight text-ink">{value}</div>
+          {sub && <div className="mt-1 text-xs text-faint">{sub}</div>}
         </div>
         {Icon && (
-          <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${GRADIENTS[color]} text-white shadow-md`}>
+          <div className={`flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-md ${iconClass}`}>
             <Icon className="h-5 w-5" />
           </div>
         )}
@@ -59,18 +59,19 @@ export function StatCard({ label, value, icon: Icon, color = 'brand', sub }) {
   )
 }
 
-export function Bar({ value, max, gradient = 'from-brand-500 to-violet-500' }) {
+export function Bar({ value, max, variant = 'accent' }) {
   const pct = max ? Math.min(100, Math.round((value / max) * 100)) : 0
+  const fill = variant === 'blue' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' : 'grad-accent'
   return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
-      <div className={`h-2 rounded-full bg-gradient-to-r ${gradient} transition-all duration-500`} style={{ width: `${pct}%` }} />
+    <div className="h-2 w-full overflow-hidden rounded-full bg-surface-2">
+      <div className={`h-2 rounded-full transition-all duration-500 ${fill}`} style={{ width: `${pct}%` }} />
     </div>
   )
 }
 
-// Deterministic gradient avatar from a name.
+// Deterministic gradient avatar from a name (decorative — stays multi-hue).
 const AVATAR_GRADS = [
-  'from-brand-500 to-violet-500',
+  'from-indigo-500 to-violet-500',
   'from-blue-500 to-cyan-500',
   'from-emerald-500 to-teal-500',
   'from-amber-500 to-orange-500',
@@ -96,14 +97,14 @@ export function Avatar({ name = '?', size = 'h-9 w-9', text = 'text-xs' }) {
 
 export function Spinner() {
   return (
-    <div className="flex items-center justify-center py-16 text-slate-400">
-      <div className="h-7 w-7 animate-spin rounded-full border-[3px] border-slate-200 border-t-brand-500" />
+    <div className="flex items-center justify-center py-16 text-faint">
+      <div className="h-7 w-7 animate-spin rounded-full border-[3px] border-line border-t-brand-500" />
     </div>
   )
 }
 
 export function Skeleton({ className = 'h-4 w-full' }) {
-  return <div className={`animate-pulse rounded-md bg-slate-200/70 ${className}`} />
+  return <div className={`animate-pulse rounded-md bg-surface-2 ${className}`} />
 }
 
 export function Toast({ message, type = 'info', onClose }) {
