@@ -5,8 +5,10 @@ services:
     name: ethara-backend
     runtime: python
     rootDir: backend
-    buildCommand: "pip install -r requirements.txt && python -m app.seed --reset"
-    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    buildCommand: "pip install -r requirements.txt"
+    # seed is idempotent (skips if data already present), so it safely
+    # re-seeds an empty DB on first boot / after a free-tier restart.
+    startCommand: "python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: CORS_ORIGINS
         value: "*"
