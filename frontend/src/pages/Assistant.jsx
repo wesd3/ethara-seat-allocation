@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { api } from '../api'
+import { IconSparkles, IconSend } from '../components/icons.jsx'
 
 const SUGGESTIONS = [
   'Where is my seat? My email is amit@ethara.ai',
@@ -8,6 +9,14 @@ const SUGGESTIONS = [
   'Who is sitting near amit@ethara.ai?',
   'How many seats are occupied for Project Indigo?',
 ]
+
+function BotAvatar() {
+  return (
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-violet-500 text-white shadow-sm">
+      <IconSparkles className="h-4 w-4" />
+    </span>
+  )
+}
 
 export default function Assistant() {
   const [messages, setMessages] = useState([
@@ -22,7 +31,7 @@ export default function Assistant() {
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  }, [messages, busy])
 
   const send = async (text) => {
     const q = (text ?? input).trim()
@@ -41,60 +50,67 @@ export default function Assistant() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
-      <h1 className="text-xl font-semibold">AI Assistant</h1>
+    <div className="mx-auto max-w-3xl space-y-5">
+      <div className="flex items-center gap-3">
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-violet-500 text-white shadow-glow">
+          <IconSparkles className="h-5 w-5" />
+        </span>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">AI Assistant</h1>
+          <p className="text-sm text-slate-500">Answers grounded in the live database.</p>
+        </div>
+      </div>
 
       <div className="flex flex-wrap gap-2">
         {SUGGESTIONS.map((s) => (
-          <button key={s} onClick={() => send(s)} className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-600 hover:border-brand-300 hover:text-brand-700">
-            {s}
-          </button>
+          <button key={s} onClick={() => send(s)} className="chip">{s}</button>
         ))}
       </div>
 
-      <div className="card flex h-[60vh] flex-col p-0">
-        <div className="flex-1 space-y-3 overflow-y-auto p-4">
+      <div className="card flex h-[62vh] flex-col overflow-hidden p-0">
+        <div className="flex-1 space-y-4 overflow-y-auto p-5">
           {messages.map((m, i) => (
-            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div key={i} className={`flex items-end gap-2.5 ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
+              {m.role === 'bot' && <BotAvatar />}
               <div
-                className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
+                className={`max-w-[78%] rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
                   m.role === 'user'
-                    ? 'bg-brand-500 text-white'
+                    ? 'rounded-br-md bg-gradient-to-br from-brand-500 to-violet-500 text-white'
                     : m.error
-                    ? 'bg-rose-50 text-rose-700'
-                    : 'bg-slate-100 text-slate-800'
+                    ? 'rounded-bl-md bg-rose-50 text-rose-700 ring-1 ring-rose-100'
+                    : 'rounded-bl-md bg-slate-100 text-slate-800'
                 }`}
               >
                 {m.text}
-                {m.intent && <div className="mt-1 text-[10px] uppercase tracking-wide text-slate-400">intent: {m.intent}</div>}
+                {m.intent && (
+                  <div className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">intent · {m.intent}</div>
+                )}
               </div>
             </div>
           ))}
-          {busy && <div className="text-sm text-slate-400">Thinking…</div>}
+          {busy && (
+            <div className="flex items-end gap-2.5">
+              <BotAvatar />
+              <div className="flex gap-1 rounded-2xl rounded-bl-md bg-slate-100 px-4 py-3">
+                <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.2s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.1s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400" />
+              </div>
+            </div>
+          )}
           <div ref={endRef} />
         </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            send()
-          }}
-          className="flex gap-2 border-t border-slate-100 p-3"
-        >
-          <input
-            className="input"
-            placeholder="Ask about seats, projects, neighbours…"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <button className="btn-primary" disabled={busy || !input.trim()}>
-            Send
+        <form onSubmit={(e) => { e.preventDefault(); send() }} className="flex gap-2 border-t border-slate-100 bg-white p-3">
+          <input className="input" placeholder="Ask about seats, projects, neighbours…" value={input} onChange={(e) => setInput(e.target.value)} />
+          <button className="btn-primary px-3.5" disabled={busy || !input.trim()} aria-label="Send">
+            <IconSend className="h-5 w-5" />
           </button>
         </form>
       </div>
 
       <p className="text-center text-xs text-slate-400">
-        Answers are grounded in the live database. Set <code>OPENAI_API_KEY</code> on the backend to enable LLM-polished phrasing.
+        Set <code className="rounded bg-slate-100 px-1 py-0.5">OPENAI_API_KEY</code> on the backend to enable LLM-polished phrasing.
       </p>
     </div>
   )

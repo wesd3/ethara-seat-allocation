@@ -24,7 +24,7 @@ for (const s of shots) {
   await page.waitForTimeout(s.wait)
   if (s.ai) {
     // Fire a couple of sample questions so the chat has content.
-    const chips = await page.locator('button.rounded-full').all()
+    const chips = await page.locator('button.chip').all()
     if (chips[0]) { await chips[0].click(); await page.waitForTimeout(1200) }
     if (chips[2]) { await chips[2].click(); await page.waitForTimeout(1200) }
   }
