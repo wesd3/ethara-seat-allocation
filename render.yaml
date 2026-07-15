@@ -23,12 +23,9 @@ services:
     buildCommand: "npm install && npm run build"
     staticPublishPath: dist
     envVars:
-      # Auto-wired to the backend service's host at deploy time (no manual step).
+      # Full backend URL (fromService `host` omits the .onrender.com domain).
       - key: VITE_API_BASE
-        fromService:
-          type: web
-          name: ethara-backend
-          property: host
+        value: "https://ethara-backend-8n25.onrender.com"
     routes:
       - type: rewrite
         source: /*
